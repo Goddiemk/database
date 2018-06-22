@@ -22,8 +22,8 @@ class Population(Base):
 Base.metadata.create_all(engine)
 
 url = requests.get(
-    'https://raw.githubusercontent.com/Electroscope/electroscope-api/master/mongo/population.json'
-)
+    'https://raw.githubusercontent.com/'
+    'Electroscope/electroscope-api/master/mongo/population.json')
 uploads_json = json.loads(url.content)
 uploads = []
 for result in uploads_json:
