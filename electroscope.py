@@ -1,10 +1,9 @@
 import json
 import requests
-from pprint import pprint
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
+from sqlalchemy import Column, Integer, String
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite://')
 Base = declarative_base()
