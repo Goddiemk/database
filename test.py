@@ -1,7 +1,8 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Sequence
+from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.sql import exists
 
 engine = create_engine('sqlite://')
 Session = sessionmaker(bind=engine)
@@ -21,8 +22,38 @@ class User(Base):
             self.name, self.fullname, self.password)
 
 
+class Address(Base):
+    __tablename__ = 'addresses'
+    id = Column(Integer, primary_key=True)
+    email_address = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="addresses")
+
+    def __repr__(self):
+        return "<Address(email_address='%s')>" % self.email_address
+
+
+User.addresses = relationship(
+    "Address", order_by=Address.id, back_populates="user")
+
 Base.metadata.create_all(engine)
-ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')
-session.add(ed_user)
-our_user = session.query(User).filter_by(name='ed').first()
-print(our_user is ed_user)
+
+gg = User(name='ed', fullname='Ed Jones', password='edspassword')
+session.add(gg)
+session.add_all([
+    User(name='wendy', fullname='Wendy Williams', password='foobar'),
+    User(name='mary', fullname='Mary Contrary', password='xxg527'),
+    User(name='fred', fullname='Fred Flinstone', password='blah')
+])
+session.commit()
+
+jack = User(name='jack', fullname='Jack Bean', password='gjffdd')
+jack.addresses = [
+    Address(email_address='jack@google.com'),
+    Address(email_address='j25@yahoo.com')
+]
+session.add(jack)
+session.commit()
+
+jack = session.query(User.addresses).filter_by(name='jack')
+print(jack.addresses)
