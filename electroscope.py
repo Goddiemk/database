@@ -105,9 +105,9 @@ for upload in uploads3:
 session.commit()
 
 # test search query
-for a, u in session.query(
+for distinct, township in session.query(
         Districts,
         Townships).filter(Districts.code == Townships.dtcode).filter(
             Townships.name == 'Kyonpyaw').all():
-    print(a)
-    print(u)
+    print(distinct)
+    print(township)
