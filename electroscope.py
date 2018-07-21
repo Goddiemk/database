@@ -96,4 +96,3 @@ for distinct, township in session.query(
             Townships.name == 'Kyonpyaw').all():
     print(distinct)
     print(township)
-gg
