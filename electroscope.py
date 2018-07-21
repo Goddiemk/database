@@ -63,44 +63,29 @@ url = requests.get(
     'https://raw.githubusercontent.com/'
     'Electroscope/electroscope-api/master/mongo/population.json')
 uploads_json = json.loads(url.content)
-uploads = []
 for result in uploads_json:
-    row = {}
-    row['locationcode'] = result['location_code']
-    row['popno'] = result['population']
-    uploads.append(row)
-for upload in uploads:
-    row = Population(**upload)
-    session.add(row)
+    population = Population(
+        locationcode=result['location_code'], popno=result['population'])
+    session.add(population)
 
 url2 = requests.get(
     'https://raw.githubusercontent.com/Electroscope/electroscope-api/master/mongo/townships.json'
 )
 uploads_json2 = json.loads(url2.content)
-uploads2 = []
 for result in uploads_json2:
-    row = {}
-    row['code'] = result['code']
-    row['dtcode'] = result['dt_code']
-    row['name'] = result['name']['en']
-    uploads2.append(row)
-for upload in uploads2:
-    row = Townships(**upload)
-    session.add(row)
+    townships = Townships(
+        code=result['code'],
+        dtcode=result['dt_code'],
+        name=result['name']['en'])
+    session.add(townships)
 
 url3 = requests.get(
     'https://raw.githubusercontent.com/Electroscope/electroscope-api/master/mongo/districts.json'
 )
 uploads_json3 = json.loads(url3.content)
-uploads3 = []
 for result in uploads_json3:
-    row = {}
-    row['code'] = result['code']
-    row['name'] = result['name']['en']
-    uploads3.append(row)
-for upload in uploads3:
-    row = Districts(**upload)
-    session.add(row)
+    districts = Districts(code=result['code'], name=result['name']['en'])
+    session.add(districts)
 
 session.commit()
 
